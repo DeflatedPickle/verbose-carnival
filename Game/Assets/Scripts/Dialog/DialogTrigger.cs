@@ -60,7 +60,7 @@ public class DialogTrigger : MonoBehaviour {
             _moveUp = 2;
 
             if (_dialogManager.IsDialogOpen) {
-                if (_dialogManager.CurrentSentence < _dialogManager.CurrentDialog.Sentences.Length) {
+                if (_dialogManager.CurrentSentenceIndex < _dialogManager.CurrentDialog.Sentences.Length) {
                     _dialogManager.LeaveLine();
                 }
                 else {

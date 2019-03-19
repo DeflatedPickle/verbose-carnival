@@ -535,7 +535,10 @@ MonoBehaviour:
     Sentences: []
     LeaveSentence: 
     Options: []
-  CurrentSentence: -1
+  CurrentSentenceIndex: -1
+  CurrentSentence: 
+  CurrentCharacterIndex: 0
+  RequiresCharacter: 0
   MovementSpeed: 12
   LeaveCounter: 0
   LeftEarly: 0

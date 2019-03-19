@@ -12,13 +12,19 @@ public class DialogManager : MonoBehaviour {
     public Dialog CurrentDialog;
 
     private GameObject _canvas;
-    public int CurrentSentence = -1;
+    public int CurrentSentenceIndex;
+    public string CurrentSentence;
+    public int CurrentCharacterIndex;
+
+    public bool RequiresCharacter;
     
     public float MovementSpeed;
     private Vector3 _positionOriginal;
     private Vector3 _positionIncrease;
     private Vector3 _velocity;
     private int _moveUp;
+
+    private float _textCounter;
 
     private List<GameObject> _children;
 
@@ -38,9 +44,17 @@ public class DialogManager : MonoBehaviour {
         
         if (IsDialogOpen) {
             if (Input.GetKeyDown(KeyCode.E)) {
-                if (CurrentSentence >= -1) {
+                if (CurrentSentenceIndex >= -1) {
                     NextLine();
                 }
+            }
+
+            if (_textCounter > 0) {
+                _textCounter -= Time.deltaTime;
+            }
+            else {
+                _textCounter = 0.04f;
+                RequiresCharacter = true;
             }
             
             if (LeftEarly) {
@@ -49,6 +63,15 @@ public class DialogManager : MonoBehaviour {
                 }
                 else {
                     _moveUp = 2;
+                }
+            }
+
+            if (RequiresCharacter) {
+                RequiresCharacter = false;
+
+                if (CurrentCharacterIndex + 1 <= CurrentSentence.Length) {
+                    _children[1].GetComponent<Text>().text += CurrentSentence[CurrentCharacterIndex];
+                    CurrentCharacterIndex++;
                 }
             }
 
@@ -82,7 +105,7 @@ public class DialogManager : MonoBehaviour {
         LeftEarly = false;
         CurrentDialog = dialog;
         _moveUp = 1;
-        CurrentSentence = -1;
+        CurrentSentenceIndex = 0;
 
         _currentDialog = Instantiate(DialogObject, _canvas.transform);
 
@@ -99,15 +122,19 @@ public class DialogManager : MonoBehaviour {
 
     // ReSharper disable once MemberCanBePrivate.Global
     public void NextLine() {
+        CurrentCharacterIndex = 0;
         _children[1].GetComponent<Text>().text = "";
         
-        if (CurrentSentence + 1 < CurrentDialog.Sentences.Length) {
-            CurrentSentence++;
+        if (CurrentSentenceIndex < CurrentDialog.Sentences.Length) {
+            CurrentSentence = CurrentDialog.Sentences[CurrentSentenceIndex];
+            CurrentSentenceIndex++;
+
+            _textCounter = 0.04f;
         
             // TODO: Delay this by a given amount
-            foreach (var character in CurrentDialog.Sentences[CurrentSentence]) {
-                _children[1].GetComponent<Text>().text += character;
-            }
+            // foreach (var character in CurrentDialog.Sentences[CurrentSentenceIndex]) {
+                // _children[1].GetComponent<Text>().text += character;
+            // }
         }
         else {
             _children[1].GetComponent<Text>().text = CurrentDialog.Sentences.Last();
@@ -116,18 +143,26 @@ public class DialogManager : MonoBehaviour {
     }
 
     public void LeaveLine() {
-        CurrentSentence = -2;
+        CurrentCharacterIndex = 0;
+        CurrentSentenceIndex = -1;
+        _children[1].GetComponent<Text>().text = "";
+        
         LeftEarly = true;
         
-        _children[1].GetComponent<Text>().text = "";
-        foreach (var character in CurrentDialog.LeaveSentence) {
-            _children[1].GetComponent<Text>().text += character;
-        }
+        // _children[1].GetComponent<Text>().text = "";
+        // foreach (var character in CurrentDialog.LeaveSentence) {
+        //     _children[1].GetComponent<Text>().text += character;
+        // }
+
+        CurrentSentence = CurrentDialog.LeaveSentence;
+        _textCounter = 0.04f;
     }
 
     public void CloseDialog() {
         // IsDialogOpen = false;
-        CurrentSentence = -1;
+        CurrentSentenceIndex = -1;
+        CurrentSentence = "";
+        _textCounter = 0;
         _moveUp = 2;
     }
 }
