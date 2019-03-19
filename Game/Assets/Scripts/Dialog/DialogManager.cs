@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DialogManager : MonoBehaviour {
     public GameObject DialogObject;
+    public GameObject Button;
     public bool IsDialogOpen;
 
     private GameObject _currentDialog;
@@ -76,8 +77,7 @@ public class DialogManager : MonoBehaviour {
             }
 
             if (Math.Abs(_currentDialog.transform.position.y - _positionOriginal.y) < 2f && _moveUp == 2) {
-                IsDialogOpen = false;
-                Destroy(_currentDialog);
+                ForceCloseDialog();
             }
         }
     }
@@ -106,10 +106,9 @@ public class DialogManager : MonoBehaviour {
         CurrentDialog = dialog;
         _moveUp = 1;
         CurrentSentenceIndex = 0;
+        CurrentCharacterIndex = 0;
 
         _currentDialog = Instantiate(DialogObject, _canvas.transform);
-
-        
         // 0 = Name, 1 = Content, 2 = ResponseButtons
         _children = new List<GameObject>();
 
@@ -118,6 +117,13 @@ public class DialogManager : MonoBehaviour {
         }
         
         _children[0].GetComponent<Text>().text = string.Join(", ", CurrentDialog.Names);
+
+        // Create the buttons
+        foreach (var b in CurrentDialog.Options) {
+            var button = Instantiate(Button, _children[2].transform);
+            button.transform.Find("Text").GetComponent<Text>().text = b.Name;
+            button.transform.GetComponent<Button>().onClick.AddListener(() => b.Function.Invoke());
+        }
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
@@ -130,11 +136,6 @@ public class DialogManager : MonoBehaviour {
             CurrentSentenceIndex++;
 
             _textCounter = 0.04f;
-        
-            // TODO: Delay this by a given amount
-            // foreach (var character in CurrentDialog.Sentences[CurrentSentenceIndex]) {
-                // _children[1].GetComponent<Text>().text += character;
-            // }
         }
         else {
             _children[1].GetComponent<Text>().text = CurrentDialog.Sentences.Last();
@@ -164,5 +165,10 @@ public class DialogManager : MonoBehaviour {
         CurrentSentence = "";
         _textCounter = 0;
         _moveUp = 2;
+    }
+
+    public void ForceCloseDialog() {
+        IsDialogOpen = false;
+        Destroy(_currentDialog);
     }
 }
