@@ -13,16 +13,18 @@ public class Move : MonoBehaviour {
 
     private Rigidbody2D _rigidbody2D;
     private Jump _jump;
+    private GeneralAttributes _generalAttributes;
 
     private void Awake() {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _jump = GetComponent<Jump>();
+        _generalAttributes = GetComponent<GeneralAttributes>();
 
         _speed = MaxOnGroundSpeed;
     }
 
     private void Update() {
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) {
+        if (!_generalAttributes.IsSitting && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))) {
             var horizontal = Input.GetAxis("Horizontal");
 
             if (!_jump.IsGrounded) {

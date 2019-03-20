@@ -10,14 +10,17 @@ public class Jump : MonoBehaviour {
     public bool IsGrounded;
 
     private Rigidbody2D _rigidbody2D;
+    private GeneralAttributes _generalAttributes;
 
     private void Awake() {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _generalAttributes = GetComponent<GeneralAttributes>();
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded) {
             _rigidbody2D.velocity = Vector2.up * JumpVelocity;
+            _generalAttributes.IsSitting = false;
         }
 
         // IsGrounded = Physics2D.OverlapCircle(Ground.position, 0.15f, GroundLayerMask);
