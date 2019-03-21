@@ -124,6 +124,8 @@ public class DialogManager : MonoBehaviour {
             button.transform.Find("Text").GetComponent<Text>().text = b.Name;
             button.transform.GetComponent<Button>().onClick.AddListener(() => b.Function.Invoke());
         }
+        
+        NextLine();
     }
 
     // ReSharper disable once MemberCanBePrivate.Global

@@ -15,7 +15,7 @@ public class DialogResponses : MonoBehaviour {
             LeaveSentence = "Have a nice day...",
             Options = new Dialog.Option[] { }
         });
-        _dialogManager.NextLine();
+        // _dialogManager.NextLine();
     }
 
     public void NPC1_YoureABeautifulPerson() {
@@ -26,6 +26,6 @@ public class DialogResponses : MonoBehaviour {
             LeaveSentence = "You made my day!",
             Options = new Dialog.Option[] { }
         });
-        _dialogManager.NextLine();
+        // _dialogManager.NextLine();
     }
 }

@@ -1044,7 +1044,7 @@ PrefabInstance:
     - target: {fileID: 4023424772094046631, guid: 56c2e3027a941424e8405a9cba298445,
         type: 3}
       propertyPath: m_Name
-      value: DialogManager
+      value: GeneralManager
       objectReference: {fileID: 0}
     - target: {fileID: 4023424772094046629, guid: 56c2e3027a941424e8405a9cba298445,
         type: 3}
